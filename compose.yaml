@@ -1,29 +1,27 @@
+version: "3.9"
 services:
-  backend:
-    build: backend
-    depends_on:
-      database:
-        condition: service_healthy
-    environment:
-      - PGURI=postgres://postgres:secret@database/postgres
-    ports:
-      - "3000:3000"
-
-  database:
-    environment:
-      - POSTGRES_PASSWORD=secret
-    healthcheck:
-      interval: 1s
-      test: 'pg_isready --username=postgres'
-    image: postgres
-    volumes:
-      - ./data:/var/lib/postgresql/data
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3001:3000"
-    environment:
-      - NODE_ENV=production
+ backend:
+   build:
+     context: ./backend
+   depends_on:
+     database:
+       condition: service_healthy
+   environment:
+     PGURI: postgres://postgres:secret@database/postgres
+   ports:
+     - "3000:3000"
+ database:
+   image: postgres
+   environment:
+     POSTGRES_USER: postgres
+     POSTGRES_PASSWORD: secret
+   healthcheck:
+     test: ["CMD-SHELL", "pg_isready --username=postgres"]
+     interval: 1s
+     timeout: 5s
+     retries: 3
+   volumes:
+     - pgdata:/var/lib/postgresql/data
+     - ./initdb/init.sql:/docker-entrypoint-initdb.d/init.sql
+volumes:
+ pgdata:
