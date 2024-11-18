@@ -1,14 +1,25 @@
+version: '3'
 services:
   backend:
     build:
-      context: ./backend
+      context: backend  # Ensure this points to the backend Dockerfile
     depends_on:
       database:
         condition: service_healthy
     environment:
       PGURI: postgres://postgres:Frieri@database/postgres
     ports:
-      - "3000:3000"
+      - "3000:3000"  # Expose the backend port
+    networks:
+      - fullstack-gym-network  # If needed
+
+  frontend:
+    build:
+      context: frontend  # Ensure this points to the frontend Dockerfile
+    ports:
+      - "3001:3001"  # Expose the frontend port
+    networks:
+      - fullstack-gym-network  # If needed
 
   database:
     image: postgres
@@ -27,3 +38,7 @@ services:
 
 volumes:
   pgdata:
+  
+networks:
+  fullstack-gym-network: 
+    driver: bridge
