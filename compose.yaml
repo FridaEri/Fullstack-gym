@@ -7,15 +7,27 @@ services:
       database:
         condition: service_healthy
     environment:
-      PGURI: postgres://postgres:secret@database/postgres
+      PGURI: postgres://postgres:Frieri@database/postgres
     ports:
       - "3000:3000"
+    networks:
+      - fullstack-network
+
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "3001:3001"
+    networks:
+      - fullstack-network
 
   database:
     image: postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secret
+      POSTGRES_PASSWORD: Frieri
       POSTGRES_DB: postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
@@ -25,6 +37,12 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./initdb/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - fullstack-network
+
+networks:
+  fullstack-network:
+    driver: bridge
 
 volumes:
   pgdata:
