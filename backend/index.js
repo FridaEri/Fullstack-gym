@@ -24,10 +24,6 @@ app.use(express.json());
 app.use(express.static(path.join(path.resolve(), 'dist')));
 
 
-const allowedOrigins = [
-  'http://74.241.242.179:3000', // Your frontend's public IP
-];
-
 app.use(cors({
   origin: 'http://74.241.242.179:3000',  // Allow your client domain
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
