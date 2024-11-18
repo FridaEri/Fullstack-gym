@@ -23,7 +23,10 @@ app.use(cors());
 app.use(express.json()); 
 app.use(express.static(path.join(path.resolve(), 'dist')));
 
-
+app.use(cors({
+  origin: 'http://74.241.242.179:3000',  // Allow your client domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
 // Inloggningsruta
 app.post('/api/login', async (req, res) => {
