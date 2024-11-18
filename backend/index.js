@@ -1,7 +1,6 @@
 const dotenv = require('dotenv');
 const { Pool } = require('pg');
 const express = require('express');
-const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
 const { v4: uuidv4 } = require('uuid');
@@ -23,11 +22,14 @@ app.use(cors());
 app.use(express.json()); 
 app.use(express.static(path.join(path.resolve(), 'dist')));
 
-// Middleware for CORS configuration
+
+const cors = require('cors');
+
+// Enable CORS for specific origins
+const allowedOrigins = ['http://74.241.242.179:3000', 'http://localhost:3001']; // Add other trusted origins here
 app.use(cors({
-  origin: 'http://74.241.242.179:3001',  // Change this to your front-end origin
-  methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type,Authorization',
+  origin: allowedOrigins,
+  credentials: true,
 }));
 
 
