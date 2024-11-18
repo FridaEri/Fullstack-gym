@@ -23,6 +23,14 @@ app.use(cors());
 app.use(express.json()); 
 app.use(express.static(path.join(path.resolve(), 'dist')));
 
+// Middleware for CORS configuration
+app.use(cors({
+  origin: 'http://74.241.242.179:3001',  // Change this to your front-end origin
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
+}));
+
+
 // Inloggningsruta
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
