@@ -1,44 +1,32 @@
-version: '3'
 services:
   backend:
-    build:
-      context: backend  # Ensure this points to the backend Dockerfile
+    build: backend
     depends_on:
       database:
         condition: service_healthy
     environment:
-      PGURI: postgres://postgres:Frieri@database/postgres
+      - PGURI=postgres://postgres:secret@database/postgres
     ports:
-      - "3000:3000"  # Expose the backend port
-    networks:
-      - fullstack-gym-network  # If needed
-
-  frontend:
-    build:
-      context: frontend  # Ensure this points to the frontend Dockerfile
-    ports:
-      - "3001:3001"  # Expose the frontend port
-    networks:
-      - fullstack-gym-network  # If needed
+      - "3000:3000"
 
   database:
     image: postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Frieri
-      POSTGRES_DB: postgres
+      - POSTGRES_PASSWORD=secret
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 1s
-      timeout: 5s
-      retries: 3
+      test: 'pg_isready --username=postgres'
     volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./initdb/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db-data:/var/lib/postgresql/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
 
 volumes:
-  pgdata:
-  
-networks:
-  fullstack-gym-network: 
-    driver: bridge
+  db-data:
