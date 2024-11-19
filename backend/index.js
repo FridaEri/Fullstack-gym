@@ -19,7 +19,6 @@ const pool = new Pool({
 // Middleware
 app.use(compression()); // Enable gzip compression
 app.use(bodyParser.json());
-app.use(cors());
 app.use(express.json()); 
 app.use(express.static(path.join(path.resolve(), 'dist')));
 
