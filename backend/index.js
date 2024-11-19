@@ -29,6 +29,11 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 
+app.get("/", (req, res) => {
+  res.redirect("/api");
+});
+
+
 // Inloggningsruta
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
